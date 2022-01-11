@@ -9,10 +9,10 @@ class AddProductForm(forms.ModelForm):
         model = Product
         fields = [
             "name",
-            "image",
             "price",
             "desc",
             "stock",
+            "image",
         ]
 
         widgets = {
@@ -20,13 +20,10 @@ class AddProductForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Name"
-                }
+                },
+                
             ),
-            "image": forms.FileInput(
-                attrs={
-                    "class": "form-control"
-                }
-            ),
+            
             "price": forms.NumberInput(
                 attrs={
                     "class": "form-control",
@@ -44,5 +41,8 @@ class AddProductForm(forms.ModelForm):
                     "class": "form-control",
                     "placeholder": "Stock",
                 }
-            )
+            ),
+            "image": forms.ClearableFileInput(
+                
+            ),
         }

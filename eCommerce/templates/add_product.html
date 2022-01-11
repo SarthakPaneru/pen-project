@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_filters %}
 
 {% block head %}
 {% endblock head %}
@@ -6,10 +7,9 @@
 {% block body %}
 
 <div class="container">
-    <form action="{% url 'addProduct' %}" method="post">
+    <form action="{% url 'addProduct' %}" enctype='multipart/form-data' method="POST" >
         {% csrf_token %}
         {{ form }}
-        <br>
         <button type="submit" class="btn btn-info">Add Product</button>
     </form>
 </div>

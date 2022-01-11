@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Product(models.Model):
-    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True) #seller name rakhnai parxa kunai pani product ko
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True)
     name = models.CharField(max_length=50)
-    image= models.ImageField(upload_to='images', blank=False, default='')
+    image= models.ImageField(upload_to='images/')
     price = models.FloatField()
     desc = models.TextField()
     stock = models.IntegerField()

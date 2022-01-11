@@ -35,18 +35,18 @@ def register_view(request):
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirmPassword')
 
         if len(password)>=8:
             if (password == confirm_password):
-                if User.objects.filter(username = username).exists():
+                if User.objects.filter(email = email).exists():
                     messages.error(request, "Username already exists")
                     print("Username already exists")
                     return redirect('register')
                 else:
-                    user = User.objects.create_user(username = username, password = confirm_password)
+                    user = User.objects.create_user(email = email, password = confirm_password)
                     Profile.objects.create(user = user)
                     return redirect('login')
             else:
