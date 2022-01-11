@@ -1,0 +1,40 @@
+*{
+    margin:0px;
+    padding:0px;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+/* LOGO CSS */
+.logoHolder h1{
+	font-family: broadway !important;
+	color:white;
+	text-align: center;
+}
+
+
+#fwidth{
+    min-width: 80px;
+    border: 1px solid hotpink;
+    padding: 3px;
+}
+#fwidth a{
+ border: 1px solid cadetblue;
+ padding: 3px;
+}
+
+.f_b1{
+  font-size:18px;
+}
+
+.fa {  
+    color: rgb(228, 228, 228);
+    padding: 10px;  
+  text-align: center;   
+    font-size: 25px;  
+    border-radius:10px; 
+  } 
+
+  .social-media{
+
+  }
