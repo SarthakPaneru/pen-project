@@ -1,0 +1,12 @@
+# pip install requirement.txt
+
+django
+
+# Pillow for managing pictures Model Customer
+Pillow
+
+# managing third parties authentication
+django-allauth
+
+# manage templates
+django-crispy_forms
