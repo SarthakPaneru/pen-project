@@ -42,7 +42,13 @@
                 <a href="{% url 'addProductPage' %}"><button class="btn btn-info btn-block">Add a Product</button></a>
             </div>
         </div>
-        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          {% for product in products %}
+            <p>{{ product.name }}</p>
+            <img src="{{ product.image.url }}">
+          {% endfor %}
+
+        </div>
     </div>
 
     {% else %}

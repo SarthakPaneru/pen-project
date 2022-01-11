@@ -15,7 +15,11 @@ def index(request):
 
 # Seller Page
 def seller(request):
-    return render(request, 'seller.html')
+    products = Product.objects.all()
+    context = {
+        'products': products
+    }
+    return render(request, 'seller.html', context)
 
 # add Product page
 #@login_required
@@ -29,14 +33,15 @@ def addProductPage(request):
 # add Product form submission
 def addProduct(request):
     if request.method == "POST":
-        form = AddProductForm(request.POST)
-
+        form = AddProductForm(request.POST, request.FILES)
+        print(form.errors)
         if form.is_valid():           
             print(request.user.username)
             #seller = Profile.objects.get(user=User.objects.get(username=request.user.username))
             #print(seller)
-            form.cleaned_data['seller'] = request.user.profile.seller
+            form.cleaned_data['seller'] = request.user.profile
             Product.objects.create(**form.cleaned_data) # ** le dictionary ma throw gareko value harulai catch garxa
-        return redirect('seller')
+            return redirect('seller')
     else:
         return redirect('addProductPage')
+    return render(request, 'add_product.html', {'form': form})
