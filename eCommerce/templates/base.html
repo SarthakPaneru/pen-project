@@ -13,7 +13,6 @@
 
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
 
 
     {% block head %}
@@ -28,15 +27,12 @@
 			</li>
 			
 			<li class="nav-item">
-				<a href="#" class="nav-link"> About </a>
+				<a href="{% url 'about' %}" class="nav-link"> About </a>
 			</li>
 
 			{% if request.user.is_authenticated %}
 			<li class="nav-item">
-				<form action="{% url 'account_logout' %}" method="post">
-					{% csrf_token %}
-					<p><input type="submit" class="nav-link">{{request.user.username.upper}} </p>
-				</form>
+				<a href="{% url 'seller' %}" class="nav-link">{{ request.user.username.upper }}</a>
 			</li>
 			{% else %}
 			<li class="nav-item">
@@ -57,11 +53,12 @@
 	<div class="container-fluid titleAndMenuHolder">
 		<div class="row">
 			<div class="col-lg-3 col-md-3 col-12 logoHolder">
-				<h1> bANJOI </h1>
+				<a href="{% url 'home' %}"><h1> bANJOI </h1></a>
 			</div>
 			<div class="col-lg-8 col-md-8 col-12 searchButtonHolder">
-				<form>
-					<input type="text" placeholder="Search your thread" />
+				<form action="{% url 'search' %}" method="POST">
+					{% csrf_token %}
+					<input type="text" placeholder="Search your thread" name='query'>
 				</form>
 			</div>
 			<div class="col-lg-1 col-md-1 col-12 userCartHolder">
@@ -88,17 +85,18 @@
 
 
 
-    {% block body %}	
+    {% block body %}
+
     {% endblock body %}
 
 
 	<!-- Footer -->
-	<footer class="footer bg-dark">
+	<footer class="footer bg-dark" id="fix_footer" style="width: 100%">
 		<div class="row p-4">
 			<div class="col m-2 d-block" id="fwidth">
 			   <a href="" class="px-3 py-2 d-block text-light f_b1">Home</a>
 			   <a href="" class="px-3 py-2 d-block text-light f_b1">About Us</a>
-			   <a href="" class="px-3 py-2 d-block text-light f_b1">Term&Condition</a>
+			   <a href="" class="px-3 py-2 d-block text-light f_b1">Term & Condition</a>
 			</div>
 			<div class="col m-2" id="fwidth">
 				<a href="" class="px-3 py-2 d-block text-light f_b1">Payment Products</a>
@@ -118,7 +116,7 @@
 					<a href="#" class="fa fa-instagram mx-3"></a> 
 				 </div>
 		</div>
-		</footer>
+	</footer>
 
 	<script src="https://kit.fontawesome.com/3c2a34836f.js" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -43,6 +43,33 @@ class AddProductForm(forms.ModelForm):
                 }
             ),
             "image": forms.ClearableFileInput(
-                
-            ),
+                attrs={
+                    "class": "btn btn-light"
+                }
+            )
+            
+        }
+
+class editProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            "name",
+            "price",
+            "desc",
+            "stock",
+        ]
+
+class AddProductImgForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["image",]
+
+        widgets = {
+            "image": forms.ClearableFileInput(
+                attrs={
+                    "class": "btn btn-light",
+                    "placeholder": "Image",
+                }
+            )
         }
