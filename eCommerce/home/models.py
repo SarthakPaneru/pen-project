@@ -16,6 +16,6 @@ class Product(models.Model):
         return self.name
 
 #
-# class Cart(models.Model):
-#     total = models.IntegerField()
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+class Cart(models.Model):
+    total = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

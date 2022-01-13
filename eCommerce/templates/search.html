@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+
+{% endblock head %}
+
+
+{% block body %}
+
+{% for product in products %}
+<div class="row">
+	<div class="col-lg-4 col-md-4 col-6">
+		<div class="product">
+			<div class="picture">
+				<a href="{% url 'individualProduct' product.pk %}"><img src="{{ product.image.url }}" class="img-fluid"></a>
+			</div>
+		<div class="productDescription">
+                <a href="{% url 'individualProduct' product.pk %}"><h5> {{ product.name }} </h5></a>
+				<p class="lgText"> {{ product.desc }} </p>
+				<div class="price">
+					{% widthratio 13 10 product.price as withoutDis %}
+					<p class="text-danger"> Rs.<span class="productPriceF"> {{ withoutDis }}</span></p>
+					<p> Rs.<span class="producetPriceR"> {{ product.price }} </span></p>
+				</div>
+
+					<button class="firstButton"><i class="fas fa-cart-arrow-down"></i> Add to cart </button><button class="lastButton">
+						<div class="popUp">
+							<form>
+								<input type="number" placeholder="Number of products"/>
+							</form>
+
+						</div>
+						<i class="fas fa-sort-up"></i></button>
+
+		</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+
+<script src="{% static 'js/product.js' %}"></script>
+
+{% endblock body %}

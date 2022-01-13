@@ -4,10 +4,18 @@ body>*{
 
 
 /*The top heading*/
+#fixedPosition{
+	position:fixed;
+	top:0;
+	width:100%;
+	z-index:4;
+	background:white;
+}
 .logoHolder h1{
 	font-family: broadway !important;
 	color: #FF9955;
 	text-align: center;
+	cursor:pointer;
 }
 .searchButtonHolder input{
 	height: 35px;
@@ -105,7 +113,7 @@ body>*{
 }
 
 
-/*Menu section*/
+/*Menu section css*/
 .menu ul{
 	margin-right: 40px;
 }
@@ -114,4 +122,12 @@ body>*{
 }
 .menu a:hover{
 	color: white;
+}
+
+/*Global classes*/
+.visibilityHidden{
+	visibility: hidden !important;
+}
+.visibilityVisible{
+	visibility: visible !important;
 }

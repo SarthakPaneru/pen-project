@@ -1,7 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block head %}{% endblock head %}
+{% block head %}
+
+<style>
+  /* Position of the footer to bottom */
+  #fix_footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    /* height:60px;   Height of the footer */
+    background:#6cf;
+ }
+
+ @media only screen and (max-width: 600px) {
+  #fix_footer {
+    position:relative;
+  }
+}
+</style>
+
+{% endblock head %}
 
 {% block body %}
 
@@ -44,8 +63,7 @@
         </div>
         <div class="col-sm-4">
           {% for product in products %}
-            <p>{{ product.name }}</p>
-            <img src="{{ product.image.url }}">
+            <a href="{% url 'editProduct' product.pk %}">{{ product.name }}</a>
           {% endfor %}
 
         </div>
@@ -61,4 +79,5 @@
 
     <p>Already a seller? <a href="{% url 'account_login' %}">Log In</a></p>
     {% endif %}
+  </div>
 {% endblock body %}
