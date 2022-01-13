@@ -11,7 +11,7 @@
 .dummyPrice{
     text-decoration:line-through;
 }
-.description button{
+.description button, .userComment button{
     background:#FF9955;
     color:white;
     padding:10px;

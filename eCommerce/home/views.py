@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from authentication.models import Profile
-from home.models import Product
+from home.models import Cart, Comment, Product
 from .forms import AddProductForm, AddProductImgForm, editProductForm 
 from django.contrib.auth.decorators import login_required
 from authentication.models import Profile
@@ -39,9 +39,9 @@ def addProductPage(request):
 @login_required
 def addProduct(request):
     if request.method == "POST":
-        form = AddProductForm(request.POST), AddProductImgForm(request.POST, request.FILES)
+        form = AddProductForm(request.POST, request.FILES)
         #img_form = AddProductImgForm(request.POST, request.FILES)
-        print(form.errors)
+        # print(form.errors)
         if form.is_valid():           
             print(request.user.username)
             #seller = Profile.objects.get(user=User.objects.get(username=request.user.username))
@@ -113,3 +113,35 @@ def search(request):
         'products': products
     }
     return render(request, 'search.html', context)
+
+# views for cart system
+def cart(request):
+    carts = Cart.objects.all()
+    context = {
+        'carts': carts
+    }
+    return render(request, 'cart.html', context)
+
+# add to cart
+def addToCart(request, pk):
+    product = Product.objects.get(pk = pk)
+
+    if request.method == 'POST':
+        cart.product = product
+        cart.total += 1 
+        cart.save()
+
+# comment section
+@login_required
+def postComment(request, pk):
+    str = request.POST.get('userComment')
+    
+    if request.method == 'POST':
+        Comment.comment = str
+        Comment.profile = request.user
+        Comment.save()
+        return render(request, 'individualProduct.html')
+    return render(request, 'individualProduct.html')
+
+def test(request):
+    return render(request, 'test.html')

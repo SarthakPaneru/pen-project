@@ -14,11 +14,16 @@
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+	{% comment %} <style>
+		@font-face { font-family: Broadway-Regular; src: url(fonts/Broadway-Regular.ttf' ); }
+	</style> {% endcomment %}
 
     {% block head %}
+
     {% endblock head %}
 </head>
 <body>
+	{% comment %} <div id = "fixedPosition"> {% endcomment %}
     <!----Menu---->
 	<div class="menu bg-dark">
 		<ul class="nav nav-bar justify-content-end">
@@ -63,22 +68,32 @@
 			</div>
 			<div class="col-lg-1 col-md-1 col-12 userCartHolder">
 				<div class="d-none d-md-block">
+					{% comment %} <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a> {% endcomment %}
 					<i class="fas fa-shopping-cart"></i>
 				</div>
 
 			</div>
 		</div>
 	</div>
+{% comment %} </div> {% endcomment %}
 
-	<!---Cart stack -->
+	<!---Cart stack-->
 	<div class="cartStack d-none d-md-block">
 		<div class="cartButtonContainer">
 			<i class="far fa-times-circle"></i>
 		</div>
 		<div class="cartBody">
 			<!---If the user is not logged in-->
-			<h5> <i class="fas fa-lock"></i>  Quick cart is only accessible if you are logged in ... </h5>
-			<button href="#"> Go to Cart </button> 
+			<div class="priceContainer">
+				<h5> Price : NRS <span class="totalPrice">  </span> </h5>
+			</div>
+			<div class="addedProductsContainer">
+				<p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid ex, nisi eius laborum nobis,
+					excepturi ratione voluptatibus delectus consectetur nemo veniam vero quae animi vel culpa
+					officia dolorem debitis minima.</p>
+				<!---Added products stay here-->
+			</div>
+			<button href="#"> Go to Cart </button>
 			<!---If the user is logged in -->
 		</div>
 	</div>
@@ -119,8 +134,10 @@
 	</footer>
 
 	<script src="https://kit.fontawesome.com/3c2a34836f.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<script  src="{% static 'js/base.js' %}"></script>
+	<script src="../static/js/productGSAP.js"></script>
 
 </body>
 </html>
