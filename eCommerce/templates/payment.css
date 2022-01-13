@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.check_Block{
+    background-color: rgb(235, 235, 235);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    
+}
+
+.checkout_block{
+    border-radius: 12px;
+   min-width: 450px;
+   max-width: 37%;
+   height: 550px;
+   background-color: white;
+   padding: 0.9em 1.2em;
+   padding-top:2em;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+}
+
+label{
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+input,.checkout_block .totalAmount{
+    border: 1px solid rgb(148, 148, 148);
+   border-radius: 5px;
+   padding: 0.5em 0.8em;
+   min-width: 280px;
+}
+
+.totalAmount{
+    font-size:1.05rem;
+    color:rgb(161, 161, 161);
+}
+
+#Btn{
+    letter-spacing: 1px;
+    max-width: 310px;
+    margin-top:3rem;
+    /* border: 2px solid  black; */
+}
