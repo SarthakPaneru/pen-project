@@ -1,3 +1,9 @@
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}/*   for footer */
+
 .headingContainer{
     margin-top:20px;
     margin-left:20px;

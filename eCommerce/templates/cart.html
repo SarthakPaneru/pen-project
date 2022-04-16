@@ -3,6 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}" />
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 {% endblock head %}
 
 
@@ -28,74 +29,62 @@
                 </tr>
 
                 <!---Colned when multiple values entered-->
-                <tr>
-
+                {% for cart in carts %}
                     
-                    <td>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-6 col-12">
-                                    <img src="../static/Image/dummy2.jpg" class="img-fluid"/>
-                                </div>
-                                <div class="col-lg-6 col-12 prodDescription">
-                                    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nemo
-                                        eaque nisi eius, rerum sit, perferendis cum modi sitatibus exercitationem?
-                                    <p class="perPrice"> Per price :NRS. 50</p>
+                    <tr>
+                        <td>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-6 col-12">
+                                        <img src="{{ cart.product.image.url }}" class="img-fluid"/>
                                     </div>
+                                    <div class="col-lg-6 col-12 prodDescription">
+                                        <p> {{ cart.product.desc }}
+                                        <p class="perPrice"> Per price :NRS. {{ cart.product.price }}</p>
+                                        </div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flextd">
-                        <button class="increment"> + </button><input type="text" class="displayNumber" disabled/><button class="decrement"> - </button>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flexPriceDisplay">
-                        <h5> 0 </h5>
-                        </div>
-                    </td>
+                        </td>
+                        <td>
+                            <div class="flextd">
+                            <form action="{% url 'incProductInCart' cart.product.pk %}" method="post">{% csrf_token %}<button type="submit"> + </button></form><input type="text" value="{{ cart.total }}"><form action="{% url 'decProductInCart' cart.product.pk %}" method="post">{% csrf_token %}<button class="decrement"> - </button></form>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flexPriceDisplay">
+                            <h5> {{ cart.totalPrice }} </h5>
+                            </div>
+                        </td>
+
+                        <td>
+                            <form action="{% url 'delete_cart' cart.pk %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-danger" type="submit"><i class="fa fa-trash"></i>
+                            </form>
+                        </td>
 
 
 
-                </tr>
-                <tr>
-
+                    </tr>
                     
+                    
+                {% endfor %}
+                <tr>
                     <td>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-6 col-12">
-                                    <img src="../static/Image/dummy2.jpg" class="img-fluid"/>
-                                </div>
-                                <div class="col-lg-6 col-12 prodDescription">
-                                    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nemo
-                                        eaque nisi eius, rerum sit, perferendis cum modi sitatibus exercitationem?
-                                    <p class="perPrice"> Per price :NRS. 50</p>
-                                    </div>
-                            </div>
-                        </div>
+                        <h3>Grand Total</h3>
+                        
                     </td>
-                    <td>
-                        <div class="flextd">
-                        <button class="increment"> + </button><input type="text" class="displayNumber" disabled/><button class="decrement"> - </button>
-                        </div>
+                    <td colspan="2" >
+                        <h4 style="text-align:center;">{{ grandTotal }}</h4>
                     </td>
-                    <td>
-                        <div class="flexPriceDisplay">
-                        <h5> 0 </h5>
-                        </div>
-                    </td>
-
-
-
                 </tr>
-
+                <br>
             </table>
         </div>
         <div class="col-lg-3 col-md-3 col-12 paymentContainer">
             <div class="buttonContainer">
-             <button class="khaltiPayment"> Pay with khalti </button>
+                <!-- Place this where you need payment button -->
+                <button id="payment-button">Pay with Khalti</button>
              </div>
                 <h5> or </h5>
              <button class="cashInDeliver"><i class="fas fa-money-bill-wave"></i> Cash in Deliver </button> 
@@ -103,6 +92,55 @@
     </div>
 </div>
 
+<div style="flex-grow:1"></div>
+
 <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+<script>
+    
+    function verifyPayment(payload) {
+        $.ajax({
+            url: "{% url 'verify_payment' %}",
+            type: 'POST',
+            data: payload,
+            dataType: 'json',
+            success: function (response) {alert(response)},
+            error: function (error) { alert(error.responseJSON['message']) }
+        });
+    }
+
+    var config = {
+        // replace the publicKey with yours
+        "publicKey": "test_public_key_fb7ad53063fb4496894e5e3a00d4ce33",
+        "productIdentity": "1234567890",
+        "productName": "Dragon",
+        "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+            ],
+        "eventHandler": {
+            onSuccess (payload) {
+                // hit merchant api for initiating verfication
+                console.log(payload);
+            },
+            onError (error) {
+                console.log(error);
+            },
+            onClose () {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({amount: {{ grandTotal }} });
+    }
+</script>
 
 {% endblock body %}

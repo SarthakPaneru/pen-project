@@ -63,8 +63,10 @@
         </div>
         <div class="col-sm-4">
           {% for product in products %}
+            {% if product.seller == request.user %}
             <a href="{% url 'editProduct' product.pk %}">{{ product.name }}</a>
             <br>
+            {% endif %}
           {% endfor %}
 
         </div>

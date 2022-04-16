@@ -1,3 +1,6 @@
+import decimal
+from urllib import response
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from authentication.models import Profile
 from home.models import Cart, Comment, Product
@@ -5,6 +8,8 @@ from .forms import AddProductForm, AddProductImgForm, editProductForm
 from django.contrib.auth.decorators import login_required
 from authentication.models import Profile
 from django.contrib.auth.models import User
+from django.db.models import F
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -22,7 +27,7 @@ def index(request):
 def seller(request):
     products = Product.objects.all()
     context = {
-        'products': products
+        'products': products,
     }
     return render(request, 'seller.html', context)
 
@@ -98,8 +103,17 @@ def about(request):
 # Individual product display
 def individualProduct(request, pk):
     product = Product.objects.get(pk = pk)
+    disc = product.price * decimal.Decimal(1.25)
+
+    comments = Comment.objects.filter(product_id = pk)
+
+    # comments = product.comment
     context = {
-        'product': product
+        'product': product,
+        'discs' : disc,
+        # 'comments': comments
+
+        'comments': comments
     }
     return render(request, 'individualProduct.html', context)
 
@@ -115,21 +129,81 @@ def search(request):
     return render(request, 'search.html', context)
 
 # views for cart system
-def cart(request):
-    carts = Cart.objects.all()
+@login_required
+def cart(request, username):
+    carts = Cart.objects.filter(customer_username = username)
+    print(carts)
+    #   print(carts.first().customer)   # prints first data of queryset
+    grandTotal = 0
+    print(request.user)
+    for cart in carts:
+        print(cart.customer.user)
+        if (cart.customer.user == request.user):
+            print('Good')
+            cart.totalPrice = cart.product.price * cart.total
+            grandTotal += cart.totalPrice
+            print(cart.totalPrice)
+
+    grandTotal *= 100 # as khalti accepts in paisa 
     context = {
-        'carts': carts
+        'carts': carts,
+        'grandTotal': grandTotal
     }
     return render(request, 'cart.html', context)
 
+def incProductInCart(request, pk):
+
+    if request.method == 'POST':
+        if (Cart.objects.filter(product_id = pk)):
+            Cart.objects.filter(product_id = pk).update(total=F('total')+1)
+            print('Increase')
+        return redirect('cart')
+    return render(request, 'cart.html')
+
+def decProductInCart(request, pk):
+
+    if request.method == 'POST':
+        if (Cart.objects.filter(product_id = pk)):
+            cart = Cart.objects.get(product_id = pk)
+            print('decrease')
+            if cart.total != 0:
+                Cart.objects.filter(product_id = pk).update(total=F('total')-1)
+            return redirect('cart')
+    return render(request, 'cart.html')
+
 # add to cart
+@login_required
 def addToCart(request, pk):
     product = Product.objects.get(pk = pk)
 
     if request.method == 'POST':
-        cart.product = product
-        cart.total += 1 
-        cart.save()
+        cart = Cart()
+        # idCompare = 
+        if (Cart.objects.filter(product_id = pk)):
+            # cart.product = product
+            Cart.objects.filter(product_id = pk).update(total=F('total')+1)
+            # cart.total = cart.total + 1   -> Yesari garne haine mathi jasari garne use 'F' {import django.db.models}
+        else:
+            cart.product = product
+            profile = Profile.objects.get(user = request.user)
+            cart.customer = profile
+            cart.save()
+            
+            
+            
+        
+        return redirect('individualProduct', pk)    # we must redirect here or error arises
+    return render(request, 'individualProduct.html')
+
+@login_required
+def delete_cart(request, pk):
+    cart = Cart.objects.get(pk = pk)
+
+    if request.method == 'POST':
+        cart.delete()
+
+        return redirect('cart')
+    return render(request, 'cart.html')
 
 # comment section
 @login_required
@@ -137,11 +211,50 @@ def postComment(request, pk):
     str = request.POST.get('userComment')
     
     if request.method == 'POST':
-        Comment.comment = str
-        Comment.profile = request.user
-        Comment.save()
-        return render(request, 'individualProduct.html')
+        product = Product.objects.get(pk = pk)  # kun product ko comment ho define garnu parxa
+        comment = Comment()
+        comment.comment = str
+        profile = Profile.objects.get(user = request.user)
+        comment.profile = profile        
+        comment.product = product
+        
+        comment.save()  # we should first save comment        
+
+        return redirect('individualProduct', pk)
     return render(request, 'individualProduct.html')
 
 def test(request):
     return render(request, 'test.html')
+
+@csrf_exempt
+def verify_payment(request):
+    import requests, json
+
+    data = request.POST
+    product_id = data['product_identity']
+    token = data['token']
+    amount = data['amount']
+
+    url = 'https://khalti.com/api/v2/payment/verrify/'
+    payload = {
+        'token': token,
+        'amount': amount
+    }
+    headers = {
+        'Authorization': 'Key test_secret_key_7e362c26c5a14cfb803cae48d46ac04e'
+    }
+
+    response = requests.post(url, payload, headers = headers)
+
+    response_data = json.loads(response.text)
+    status_code = str(response.status_code)
+
+    if status_code == '400':
+        response = JsonResponse({'status': 'false', 'message': response_data['detail']}, status=500)
+        return response
+
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(response_data)
+
+    return JsonResponse(f"Payment Done !! {response_data['user']['idx']}", safe=False)

@@ -30,7 +30,7 @@
 			<li class="nav-item">
 				<a href="{% url 'home' %}" class="nav-link"> Home </a>
 			</li>
-			
+
 			<li class="nav-item">
 				<a href="{% url 'about' %}" class="nav-link"> About </a>
 			</li>
@@ -49,7 +49,7 @@
 			{% endif %}
 
 			<li class="nav-item d-block d-md-none iconSml">
-				<a href="#" class="nav-link"> <i class="fas fa-shopping-cart"></i> </a>
+				<a href="{% url 'cart' request.user.username %}" class="nav-link"> <i class="fas fa-shopping-cart"></i> </a>
 			</li>
 		</ul>
 	</div>
@@ -68,8 +68,7 @@
 			</div>
 			<div class="col-lg-1 col-md-1 col-12 userCartHolder">
 				<div class="d-none d-md-block">
-					{% comment %} <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a> {% endcomment %}
-					<i class="fas fa-shopping-cart"></i>
+					<a href="{% url 'cart' request.user.username %}" style="color:grey;"><i class="fas fa-shopping-cart"></i></a>
 				</div>
 
 			</div>
@@ -128,7 +127,7 @@
 				 <div class="social-media d-flex justify-content-center">
 					<a href="#" class="fa fa-facebook mx-3"></a>
 					<a href="#" class="fa fa-twitter mx-3"></a>
-					<a href="#" class="fa fa-instagram mx-3"></a> 
+					<a href="#" class="fa fa-instagram mx-3"></a>
 				 </div>
 		</div>
 	</footer>

@@ -31,11 +31,16 @@
                         <p> {{ product.desc }} </p>
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
-                        {% widthratio 13 10 product.price as withoutDis %}
-                        <h5 class="dummyPrice text-danger"> NRS. {{ withoutDis }} </h5>
+                        {% comment %} {% widthratio 13 10 product.price as withoutDis %} {% endcomment %}
+                        <h5 class="dummyPrice text-danger"> NRS. {{ discs }} </h5>
                         <h5 class="actualPrice"> NRS. {{ product.price }} </h5>
-                        <button><i class="fas fa-money-bill-wave-alt"></i> Buy </button> <button> <i
+                        <button><i class="fas fa-money-bill-wave-alt"></i> Buy </button>
+                        
+                        <form action="{% url 'addToCart' product.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"> <i
                                 class="fas fa-cart-arrow-down"></i>Add to cart </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -86,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-12 svgContainer d-none d-lg-block">
+        {% comment %} <div class="col-lg-2 col-12 svgContainer d-none d-lg-block">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg5" version="1.1" viewBox="0 0 52.917 154.781">
                 <defs id="defs2">
                     <path id="rect92260" d="M110.784 140.67h262.275v24.218H110.784z" />
@@ -229,7 +234,7 @@
                 </g>
             </svg>
 
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 
@@ -239,7 +244,7 @@
     <div class="row">
         <div class="col-lg-3 col-md-3 col-12 userComment">
             <h5> Leave a comment </h5>
-            <form action="{% url 'postComment' request.user.pk %}" method="post">
+            <form action="{% url 'postComment' product.pk %}" method="post">
                 {% csrf_token %}
                 <textarea class="commentSection" name='userComment'></textarea>
                 <button type="submit" class="">Post Comment</button>
@@ -251,29 +256,8 @@
             </form>
         </div>
         <div class="col-lg-9 col-md-9 col-12 othersComments">
-            <h2> 5 Comments </h2>
-            <div id="comment1" class="customerComments">
-                <div class="pfp">
-                    <!--Remove this div when image added-->
-                    <div class="photo">
-
-                    </div>
-                </div>
-                <div class="comment">
-
-                </div>
-            </div>
-            <div id="comment2" class="customerComments">
-                <div class="pfp">
-                    <!--Remove this div when image added-->
-                    <div class="photo">
-
-                    </div>
-                </div>
-                <div class="comment">
-
-                </div>
-            </div>
+            <h2> {{ product.comment.length }} Comments </h2>
+            
             <div id="comment3" class="customerComments">
                 <div class="pfp">
                     <div class="photo">
@@ -281,34 +265,17 @@
                     </div>
                 </div>
                 <div class="comment">
-                    <h5 class="name"> Hirohiko </h5>
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <p> Product was good </p>
-                    <button> Report </button>
+                    {% for comment in comments  %}
+
+                        <h5 class="name"> {{ comment.profile.user }} </h5>
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <p> {{ comment.comment }} </p>
+                        <button> Report </button>
+
+                    {% endfor %}
                 </div>
             </div>
-            <div id="comment4" class="customerComments">
-                <div class="pfp">
-                    <div class="photo">
-
-                    </div>
-                </div>
-                <div class="comment">
-
-                    <button> Report </button>
-                </div>
-            </div>
-            <div id="comment5" class="customerComments">
-                <div class="pfp">
-                    <div class="photo">
-
-                    </div>
-                </div>
-                <div class="comment">
-
-                    <button id="upcall"> Report </button>
-                </div>
-            </div>
+            
 
         </div>
     </div>
